@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>🐴 [Horse Trials: Eventing] Budget-Based Happiness Optimizer</title>
+	<style>
+		h1 {
+			text-align: center;
+		}
+		body {
+			font-family: Helvetica, Arial, sans-serif;
+			margin: auto;
+  			padding: 10px;
+			color: #202227;
+			background-color: #f7f7f8;
+			max-width: 600px;
+		}
+		button {
+			border-radius: 12px;
+			margin-top: 10px;
+			color: white;
+			background-color: #335fff;
+			border-color:#335fff;
+		}
+		input {
+			width: 250px;
+			padding: 10px;
+			font-size: 16px;
+		}
+		#button {
+			display: grid;
+			justify-items: center;
+			align-items: center;
+		}
+		#input {
+			display: grid;
+			justify-items: center;
+			align-items: center;
+		}
+		#results {
+			display: grid;
+			justify-items: center;
+			align-items: center;
+			margin-top: 20px;
+			margin-left: 40px;
+			margin-right: 40px;
+      			background: white;
+      			padding: 15px;
+      			border-radius: 8px;
+   		}
+	</style>
+</head>
+<body>
+	<h1>Budget-Based Happiness Optimizer</h1>
+		<div id="input">
+			<label for="budgetInput">Enter Budget (must be $100 or more):</label>
+			<input type="number" id="budgetInput"/>
+		</div>
+		<div id="button">	
+			<button onclick="optimize()">Optimize</button>
+		</div>
+		<div id="results">
+    			<h2>Recommended Purchases:</h2>
+    			<ul id="itemList"></ul>
+    			<p><strong>Total Cost:</strong> $<span id="totalCost">0</span></p>
+    			<p><strong>Total Happiness:</strong> <span id="totalHappiness">0</span></p>
+  		</div>
+<script>
+	const items = [
+		{name: "Fly Spray", happiness: 60, cost: 230},
+      		{name: "Hoof Oil", happiness: 50, cost: 200},
+      		{name: "High Energy Horse Feed", happiness: 40, cost: 170},
+      		{name: "Balanced Horse Feed", happiness: 30, cost: 140},
+      		{name: "Carrot Treats", happiness: 25, cost: 130} ,
+      		{name: "Low Energy Horse Feed", happiness: 20, cost: 110},
+      		{name: "Beet Treats", happiness: 20, cost: 110},
+      		{name: "Apple Treats", happiness: 15, cost: 100}
+	]	
+	function optimize() {
+  		let budget = parseInt(document.getElementById("budgetInput").value);
+  		const sorted = [...items].sort((a, b) => (b.happiness / b.cost) - (a.happiness / a.cost));
+ 	 	let totalHappiness = 0;
+  		let totalCost = 0;
+  		let purchase = [];
+  		for (let item of sorted) {
+    			const maxQty = Math.floor(budget / item.cost);
+    				if (maxQty > 0) {
+      					const cost = maxQty * item.cost;
+      					const happiness = maxQty * item.happiness;
+      					budget -= cost;
+      					totalCost += cost;
+      					totalHappiness += happiness;
+      					purchase.push(`${maxQty}× ${item.name} — $${cost}, ${happiness} <img src="images/happiness.png" alt="Happiness" width="13" height="13">`);
+    				}
+		}
+  	document.getElementById("itemList").innerHTML = purchase.map(r => `<li>${r}</li>`).join("");
+	document.getElementById("totalCost").innerText = totalCost;
+	document.getElementById("totalHappiness").innerText = totalHappiness;
+	}
+</script>
+</body>
+</html>
